@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -9,15 +10,20 @@
         <module name="ihrm_common" />
         <module name="ihrm_common_model" />
         <module name="ihrm_company" />
+        <module name="ihrm_employee" />
+        <module name="ihrm_eureka" />
         <module name="ihrm_system" />
         <module name="shiro-springboot" />
         <module name="shiro_demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="demo" target="1.8" />
       <module name="ihrm_common" target="1.8" />
       <module name="ihrm_common_model" target="1.8" />
       <module name="ihrm_company" target="1.8" />
+      <module name="ihrm_employee" target="1.8" />
+      <module name="ihrm_eureka" target="1.8" />
       <module name="ihrm_parent" target="1.8" />
       <module name="ihrm_system" target="1.8" />
       <module name="shiro-springboot" target="1.8" />
@@ -26,9 +32,12 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="demo" options="-parameters" />
       <module name="ihrm_common" options="-parameters" />
       <module name="ihrm_common_model" options="-parameters" />
       <module name="ihrm_company" options="-parameters" />
+      <module name="ihrm_employee" options="-parameters" />
+      <module name="ihrm_eureka" options="-parameters" />
       <module name="ihrm_parent" options="-parameters" />
       <module name="ihrm_system" options="-parameters" />
       <module name="shiro-springboot" options="-parameters" />

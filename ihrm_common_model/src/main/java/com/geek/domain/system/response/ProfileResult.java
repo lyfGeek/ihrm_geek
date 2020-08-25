@@ -4,11 +4,17 @@ import com.geek.domain.system.Permission;
 import com.geek.domain.system.Role;
 import com.geek.domain.system.User;
 import lombok.Data;
+import org.crazycake.shiro.AuthCachePrincipal;
 
+import java.io.Serializable;
 import java.util.*;
 
+// profile
+//  n. 面部的侧影；侧面轮廓；概述；简介；传略；印象；形象
+//  v. 扼要介绍；概述；写简介
+
 @Data
-public class ProfileResult {
+public class ProfileResult implements Serializable, AuthCachePrincipal {
 
     private String userId;
     private String mobile;
@@ -68,5 +74,10 @@ public class ProfileResult {
         this.roles.put("menus", menus);
         this.roles.put("points", points);
         this.roles.put("apis", apis);
+    }
+
+    @Override
+    public String getAuthCacheKey() {
+        return null;
     }
 }

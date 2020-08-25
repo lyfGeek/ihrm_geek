@@ -18,7 +18,13 @@ import java.util.Set;
 /**
  * 自定义的 realm。
  */
-public class CustomRealm extends AuthorizingRealm {
+public class CustomRealm extends AuthorizingRealm {// 实现了 Authorizer。
+    // - 多 Realm 匹配流程。
+    // 如果实现了 Authorizer，那么接着调用其相应的 isPermitted*/hasRole* 接口进行匹配。
+    // 如果有一个 Realm 匹配那么将返回 true，否则返回 false。
+
+    // - 授权。
+    // extends AuthorizingRealm。
 
     @Autowired
     private IUserService userService;

@@ -12,7 +12,6 @@ import org.junit.Test;
 
 public class PermissionRealmTest {
 
-
     private SecurityManager securityManager;
 
     @Before

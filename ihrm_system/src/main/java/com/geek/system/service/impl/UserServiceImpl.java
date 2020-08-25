@@ -6,6 +6,7 @@ import com.geek.domain.system.User;
 import com.geek.system.dao.IRoleDao;
 import com.geek.system.dao.IUserDao;
 import com.geek.system.service.IUserService;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,7 +52,10 @@ public class UserServiceImpl implements IUserService {
     public void save(User user) {
         // 设置主键的值。
         String id = idWorker.nextId() + "";
-        user.setPassword("123");// 设置初始密码。
+        // 加密密码。
+        String password = new Md5Hash("123456", user.getMobile(), 3).toString();// 密码，盐，加密次数。
+        user.setPassword(password);// 设置初始密码。
+        user.setLevel("user");// 用户等级。
         user.setEnableState(1);
         user.setId(id);
         // 保存。

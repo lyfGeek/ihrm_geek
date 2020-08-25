@@ -67,7 +67,7 @@ public class DepartmentController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/department/{departmentId}", method = RequestMethod.GET)
-    public Result findAll(@PathVariable("departmentId") String id) {
+    public Result findById(@PathVariable("departmentId") String id) {
         Department department = departmentService.findById(id);
         return new Result(ResultCode.SUCCESS, department);
     }

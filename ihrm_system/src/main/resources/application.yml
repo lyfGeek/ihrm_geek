@@ -12,7 +12,14 @@ spring:
     database: mysql
     show-sql: true
     open-in-view: true
+  redis:
+    host: 192.168.142.161
+    port: 6379
 jwt:
   config:
     key: saas-ihrm
     ttl: 3600000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka/

@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @Service
 public class DepartmentServiceImpl extends BaseService implements IDepartmentService {
-//public class DepartmentServiceImpl implements IDepartmentService {
 
     @Autowired
     private IDepartmentDao departmentDao;

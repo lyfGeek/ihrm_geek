@@ -52,7 +52,6 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
             // 获取 claims。
             Claims claims = jwtUtils.parseJwt(token);
             if (claims != null) {
-
                 // 通过 Claims 获取到当前用户可访问的 api 权限。
                 String apis = (String) claims.get("apis");// api-user-delete, api-user-update...
                 // 通过 Handler
@@ -70,7 +69,6 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                 }
             }
         }
-
         throw new CommonException(ResultCode.UNAUTHENTICATED);
     }
 
@@ -80,7 +78,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 //        super.postHandle(request, response, handler, modelAndView);
     }
 
-    // 相应结束之前。
+    // 响应结束之前。
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 //        super.afterCompletion(request, response, handler, ex);

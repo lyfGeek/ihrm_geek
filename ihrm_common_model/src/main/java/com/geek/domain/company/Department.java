@@ -25,7 +25,7 @@ public class Department implements Serializable {
     /**
      * 父级ID。
      */
-    private String parentId;
+    private String pid;
     /**
      * 企业ID。
      */
@@ -60,7 +60,8 @@ public class Department implements Serializable {
 CREATE TABLE `ihrm`.`co_department` (
   `id` VARCHAR(40) NOT NULL,
   `company_id` VARCHAR(255) NOT NULL COMMENT '企业 id。',
-  `parent_id` VARCHAR(255) NULL DEFAULT NULL COMMENT '父级部门 id。',
+  `pid` VARCHAR(255) NULL DEFAULT NULL COMMENT '父级部门 id。',
+--   `parent_id` VARCHAR(255) NULL DEFAULT NULL COMMENT '父级部门 id。',
   `name` VARCHAR(255) NOT NULL COMMENT '部门名称。',
   `code` VARCHAR(255) NOT NULL COMMENT '部门编码。',
   `category` VARCHAR(255) NULL DEFAULT NULL COMMENT '部门类别。',

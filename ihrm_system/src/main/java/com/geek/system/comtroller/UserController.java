@@ -6,20 +6,25 @@ import com.geek.common.entity.Result;
 import com.geek.common.entity.ResultCode;
 import com.geek.common.exception.CommonException;
 import com.geek.common.utils.JwtUtils;
-import com.geek.domain.system.Permission;
-import com.geek.domain.system.Role;
 import com.geek.domain.system.User;
 import com.geek.domain.system.response.ProfileResult;
 import com.geek.domain.system.response.UserResult;
+import com.geek.system.client.DepartmentFeignClient;
 import com.geek.system.service.IPermissionService;
 import com.geek.system.service.IUserService;
-import io.jsonwebtoken.Claims;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +41,21 @@ public class UserController extends BaseController {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private DepartmentFeignClient departmentFeignClient;
+
+    /**
+     * 测试 feign 组件。
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/test/{id}")
+    public Result test(@PathVariable("id") String id) {
+        // 调用系统微服务的接口。
+        return departmentFeignClient.findById(id);
+    }
 
     /**
      * 分配权限。
@@ -105,12 +125,13 @@ public class UserController extends BaseController {
     /**
      * 修改用户。
      *
-     * @param id
+     * @param userId
+     * @param user
      * @return
      */
     @PutMapping("/user/{userId}")
-    public Result update(@PathVariable("userId") String id, @RequestBody User user) {
-        user.setId(id);
+    public Result update(@PathVariable("userId") String userId, @RequestBody User user) {
+        user.setId(userId);
         userService.update(user);
         return new Result(ResultCode.SUCCESS);
     }
@@ -118,12 +139,13 @@ public class UserController extends BaseController {
     /**
      * 根据 id 删除用户。
      *
-     * @param id
+     * @param userId
      * @return
      */
+    @RequiresPermissions("API-USER-DELETE")
     @DeleteMapping(value = "/user/{userId}", name = "API-USER-DELETE")
-    public Result delete(@PathVariable("userId") String id) {
-        userService.deleteById(id);
+    public Result delete(@PathVariable("userId") String userId) {
+        userService.deleteById(userId);
         return new Result(ResultCode.SUCCESS);
     }
 
@@ -141,31 +163,57 @@ public class UserController extends BaseController {
     public Result login(@RequestBody Map<String, String> loginMap) {
         String mobile = loginMap.get("mobile");
         String password = loginMap.get("password");
-        User user = userService.findByMobile(mobile);
-        // 登录失败。
-        if (user == null || !password.equals(user.getPassword())) {
+
+        try {
+            // 构造登录令牌。UsernamePasswordToken。
+            password = new Md5Hash(password, mobile, 3).toString();// 密码，盐，加密次数。
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(mobile, password);
+
+            // 获取 subject。
+            Subject subject = SecurityUtils.getSubject();
+
+            // 调用 login(); 进入 com.geek.system.shiro.realm.UserRealm 完成认证。
+            subject.login(usernamePasswordToken);
+
+            // 获取 sessionId。
+            Serializable sessionId = subject.getSession().getId();
+            sessionId = sessionId.toString();
+
+            // 构造返回结果。
+            return new Result(ResultCode.SUCCESS, sessionId);
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
             return new Result(ResultCode.MOBILE_OR_PASSWORD_ERROR);
-        } else {
-            // 登录成功。
-
-            // API 权限字符串。
-            StringBuilder stringBuilder = new StringBuilder();
-            // 获取所有 api 权限。
-            for (Role role : user.getRoles()) {
-                for (Permission permission : role.getPermissions()) {
-                    stringBuilder.append(permission.getCode()).append(", ");
-                }
-            }
-
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("apis", stringBuilder.toString());
-
-            map.put("companyId", user.getCompanyId());
-            map.put("companyName", user.getCompanyName());
-            String token = jwtUtils.createJwt(user.getId(), user.getUsername(), map);
-            return new Result(ResultCode.SUCCESS, token);
         }
+
+        // shiro 登录方式。↑ ↑ ↑。
+        // jwt 登录方式。↓ ↓ ↓。
+
+//        User user = userService.findByMobile(mobile);
+//        // 登录失败。
+//        if (user == null || !password.equals(user.getPassword())) {
+//            return new Result(ResultCode.MOBILE_OR_PASSWORD_ERROR);
+//        } else {
+//            // 登录成功。
+//
+//            // API 权限字符串。
+//            StringBuilder stringBuilder = new StringBuilder();
+//            // 获取所有 api 权限。
+//            for (Role role : user.getRoles()) {
+//                for (Permission permission : role.getPermissions()) {
+//                    stringBuilder.append(permission.getCode()).append(", ");
+//                }
+//            }
+//
+//            Map<String, Object> map = new HashMap<>();
+//
+//            map.put("apis", stringBuilder.toString());
+//
+//            map.put("companyId", user.getCompanyId());
+//            map.put("companyName", user.getCompanyName());
+//            String token = jwtUtils.createJwt(user.getId(), user.getUsername(), map);
+//            return new Result(ResultCode.SUCCESS, token);
+//        }
     }
 
     /**
@@ -194,6 +242,8 @@ public class UserController extends BaseController {
         Claims claims = jwtUtils.parseJwt(token);
         //        String userId = "1";
         */
+
+        /*
         Claims claims = (Claims) request.getAttribute("user_claims");
 
         String userId = claims.getId();
@@ -214,7 +264,7 @@ public class UserController extends BaseController {
             List<Permission> list = permissionService.findAll(map);
             profileResult = new ProfileResult(user, list);
         }
-
+        */
         // 简化 ↑ ↑ ↑。
 /*        // saas 平台管理员具有所有权限。
         if ("saasAdmin".equals(user.getLevel())) {
@@ -228,6 +278,15 @@ public class UserController extends BaseController {
             // 企业用户具有当前角色的权限。
             profileResult = new ProfileResult(user);
         }*/
+
+        // shiro。
+        // 获取 session 中的安全数据。
+        Subject subject = SecurityUtils.getSubject();
+        // 获取所有安全数据集合。
+        PrincipalCollection principals = subject.getPrincipals();
+        // 获取安全数据。
+        ProfileResult profileResult = (ProfileResult) principals.getPrimaryPrincipal();
+
         return new Result(ResultCode.SUCCESS, profileResult);
     }
 }

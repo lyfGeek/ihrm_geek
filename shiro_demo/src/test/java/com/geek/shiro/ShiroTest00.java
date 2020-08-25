@@ -36,6 +36,7 @@ public class ShiroTest00 {
         String password = "123";
         AuthenticationToken token = new UsernamePasswordToken(username, password);
         // 主体登录。
+        // 其会自动委托给 Security Manager，调用之前必须通过 SecurityUtils.setSecurityManager() 设置；
         subject.login(token);
 
         // 验证用户是否登录成功。
