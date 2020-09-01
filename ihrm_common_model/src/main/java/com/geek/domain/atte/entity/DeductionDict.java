@@ -1,10 +1,8 @@
 package com.geek.domain.atte.entity;
 
 import com.geek.domain.atte.base.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,8 +16,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "atte_deduction_dict")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class DeductionDict extends BaseEntity implements Serializable {
     @Id
     private String id;

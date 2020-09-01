@@ -1,6 +1,6 @@
 package com.geek.employee.config;
 
-import com.geek.common.realm.IhrmRealm;
+import com.geek.common.shiro.realm.IhrmRealm;
 import com.geek.common.shiro.session.CustomSessionManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;

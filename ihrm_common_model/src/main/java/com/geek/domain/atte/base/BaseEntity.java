@@ -1,14 +1,12 @@
 package com.geek.domain.atte.base;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @MappedSuperclass
 public class BaseEntity implements Serializable {
 

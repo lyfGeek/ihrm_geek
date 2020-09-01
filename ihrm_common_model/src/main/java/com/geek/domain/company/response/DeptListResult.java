@@ -2,15 +2,11 @@ package com.geek.domain.company.response;
 
 import com.geek.domain.company.Company;
 import com.geek.domain.company.Department;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class DeptListResult {
     private String companyId;
     private String companyName;

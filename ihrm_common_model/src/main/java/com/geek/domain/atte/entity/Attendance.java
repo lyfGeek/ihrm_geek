@@ -3,7 +3,6 @@ package com.geek.domain.atte.entity;
 import com.geek.domain.atte.base.BaseEntity;
 import com.geek.domain.atte.vo.AtteUploadVo;
 import com.geek.domain.system.User;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,8 +19,6 @@ import java.util.Date;
 @Entity
 @Table(name = "atte_attendance")
 @Data
-//@NoArgsConstructor
-@AllArgsConstructor
 public class Attendance extends BaseEntity implements Serializable {
 
     @Id

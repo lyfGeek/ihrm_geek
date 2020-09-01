@@ -1,8 +1,6 @@
 package com.geek.domain.system;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -13,9 +11,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "pe_permission")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @DynamicInsert(true)
 @DynamicUpdate(true)
 public class Permission implements Serializable {

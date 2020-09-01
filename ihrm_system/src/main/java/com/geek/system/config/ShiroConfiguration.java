@@ -81,8 +81,11 @@ public class ShiroConfiguration {
          */
         Map<String, String> filterMap = new LinkedHashMap<>();
         // anon ~ 匿名访问。
+        filterMap.put("/sys/city/**", "anon");// 当前请求地址可以匿名访问。
+
         filterMap.put("/sys/login", "anon");// 当前请求地址可以匿名访问。
         filterMap.put("/autherror", "anon");// 当前请求地址可以匿名访问。
+        filterMap.put("/sys/faceLogin/**", "anon");// 当前请求地址可以匿名访问。
         // authc ~ 认证之后访问。
         filterMap.put("/**", "authc");// 当前请求地址必须认证之后可以访问。
 

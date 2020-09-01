@@ -1,8 +1,7 @@
 package com.geek.domain.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,8 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "pe_role")
-@Getter
-@Setter
+@Data
 public class Role implements Serializable {
     @Id
     private String id;

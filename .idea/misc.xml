@@ -7,6 +7,11 @@
         <option value="$PROJECT_DIR$/shiro_demo/pom.xml" />
         <option value="$PROJECT_DIR$/shiro-springboot/pom.xml" />
         <option value="$PROJECT_DIR$/demo/pom.xml" />
+        <option value="$PROJECT_DIR$/poi-geek/pom.xml" />
+        <option value="$PROJECT_DIR$/face-geek/pom.xml" />
+        <option value="$PROJECT_DIR$/qiniu-geek/pom.xml" />
+        <option value="$PROJECT_DIR$/jasper-geek/pom.xml" />
+        <option value="$PROJECT_DIR$/codeutils/pom.xml" />
       </list>
     </option>
   </component>

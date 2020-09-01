@@ -1,10 +1,8 @@
 package com.geek.domain.atte.entity;
 
 import com.geek.domain.atte.base.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,8 +13,6 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 public class ArchiveMonthly extends BaseEntity implements Serializable {
 
     @Id

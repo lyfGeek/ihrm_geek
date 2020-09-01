@@ -25,6 +25,18 @@ public class DepartmentServiceImpl extends BaseService implements IDepartmentSer
     private IdWorker idWorker;
 
     /**
+     * 根据部门编码和企业 id 查询部门。
+     *
+     * @param code
+     * @param companyId
+     * @return
+     */
+    @Override
+    public Department findByCode(String code, String companyId) {
+        return departmentDao.findByCodeAndCompanyId(code, companyId);
+    }
+
+    /**
      * 保存部门。
      *
      * @param department

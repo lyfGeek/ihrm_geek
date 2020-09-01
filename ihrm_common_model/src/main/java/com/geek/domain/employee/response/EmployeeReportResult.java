@@ -3,17 +3,13 @@ package com.geek.domain.employee.response;
 import com.geek.domain.employee.EmployeeResignation;
 import com.geek.domain.employee.UserCompanyPersonal;
 import com.geek.domain.poi.ExcelAttribute;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-public class EmployeeReportResult {
+import java.io.Serializable;
+
+@Data
+public class EmployeeReportResult implements Serializable {
 
     @ExcelAttribute(sort = 0)
     private String userId;

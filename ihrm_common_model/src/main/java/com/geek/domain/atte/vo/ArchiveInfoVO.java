@@ -1,6 +1,5 @@
 package com.geek.domain.atte.vo;
 
-
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

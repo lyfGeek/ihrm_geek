@@ -1,23 +1,31 @@
 package com.geek.system.service.impl;
 
+import com.baidu.aip.util.Base64Util;
 import com.geek.common.utils.IdWorker;
+import com.geek.common.utils.QiniuUploadUtil;
+import com.geek.domain.company.Department;
 import com.geek.domain.system.Role;
 import com.geek.domain.system.User;
+import com.geek.system.client.IDepartmentFeignClient;
 import com.geek.system.dao.IRoleDao;
 import com.geek.system.dao.IUserDao;
 import com.geek.system.service.IUserService;
+import com.geek.system.utils.BaiduAiUtil;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -31,6 +39,45 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IRoleDao roleDao;
+
+    @Autowired
+    private IDepartmentFeignClient departmentFeignClient;
+
+    @Autowired
+    private BaiduAiUtil baiduAiUtil;
+
+    /**
+     * 批量保存用户。
+     *
+     * @param list
+     * @param companyId
+     * @param companyName
+     */
+    @Override
+    @Transactional
+    public void saveAll(List<User> list, String companyId, String companyName) {
+        for (User user : list) {
+            // 默认密码。
+            user.setPassword(new Md5Hash("123456", user.getMobile(), 3).toString());
+            // id。
+            user.setId(idWorker.nextId() + "");
+            // 基本属性。
+            user.setCompanyId(companyId);
+            user.setCompanyName(companyName);
+            user.setInServiceStatus(1);
+            user.setEnableState(1);
+            user.setLevel("user");
+
+            // 补充部门属性。
+            Department department = departmentFeignClient.findByCode(user.getDepartmentId(), companyId);
+            if (department != null) {
+                user.setDepartmentId(department.getId());
+                user.setDepartmentName(department.getName());
+            }
+
+            userDao.save(user);
+        }
+    }
 
     /**
      * 根据 mobile 查询用户。
@@ -173,4 +220,66 @@ public class UserServiceImpl implements IUserService {
         // 更新用户。
         userDao.save(user);
     }
+
+    /**
+     * 上传图片并返回图片路径。七牛云。
+     * 并注册到百度云 AI 人脸库中。
+     * <p>
+     * - 调用百度云接口，判断当前用户是否已经注册。
+     * 已注册，更新。
+     * 未注册，注册。
+     *
+     * @param id
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public String uploadImage(String id, MultipartFile multipartFile) throws IOException {
+        // 根据 id 查询用户。
+        User user = userDao.findById(id).get();
+
+        // 将图片上传到七牛云，获取路径。
+        String imgUrl = new QiniuUploadUtil().upload(user.getId(), multipartFile.getBytes());
+
+        // 更新用户头像地址。
+        user.setStaffPhoto(imgUrl);
+        userDao.save(user);
+
+        // 借助 baiduAiUtil 判断是否注册。
+        Boolean faceExist = baiduAiUtil.faceExist(id);
+
+        String imgBase64 = Base64Util.encode(multipartFile.getBytes());
+
+        if (faceExist) {
+            // 已经存在，更新。
+            baiduAiUtil.faceUpdate(id, imgBase64);
+        } else {
+            // 不存在，注册。
+            baiduAiUtil.faceRegister(id, imgBase64);
+        }
+        // 返回。
+        return imgUrl;
+    }
+
+    /**
+     * 上传图片并返回图片路径。DataUrl。
+     *
+     * @param id            用户 id。
+     * @param multipartFile 用户上传的头像文件。
+     * @return 请求路径。
+     */
+//    @Override
+//    public String uploadImage(String id, MultipartFile multipartFile) throws IOException {
+//        // 根据 id 查询用户。
+//        User user = userDao.findById(id).get();
+//        // 使用 dataUrl 形式存储图片。对图片 byte 数组进行 BASE64 编码。
+//        String encode = "data:image/png;base64," + new String(Base64.getEncoder().encode(multipartFile.getBytes()));
+//        System.out.println("encode = " + encode);
+//        // 更新用户头像地址。
+//        user.setStaffPhoto(encode);
+//        userDao.save(user);
+//        // 返回。
+//        return encode;
+//    }
 }

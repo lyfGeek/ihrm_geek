@@ -5,13 +5,17 @@ import com.geek.common.entity.PageResult;
 import com.geek.common.entity.Result;
 import com.geek.common.entity.ResultCode;
 import com.geek.common.exception.CommonException;
+import com.geek.common.poi.ExcelImportUtil;
 import com.geek.common.utils.JwtUtils;
 import com.geek.domain.system.User;
 import com.geek.domain.system.response.ProfileResult;
 import com.geek.domain.system.response.UserResult;
-import com.geek.system.client.DepartmentFeignClient;
+import com.geek.system.client.IDepartmentFeignClient;
 import com.geek.system.service.IPermissionService;
 import com.geek.system.service.IUserService;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -22,8 +26,10 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +49,129 @@ public class UserController extends BaseController {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private DepartmentFeignClient departmentFeignClient;
+    private IDepartmentFeignClient departmentFeignClient;
+
+    /**
+     * 读取解析 Excel 数据。
+     *
+     * @param cell
+     * @return
+     */
+    private static Object getCellValue(Cell cell) {
+        // 获取单元格的属性类型。
+        CellType cellType = cell.getCellType();
+        // 根据单元格数据类型获取数据。
+        Object cellValue = null;
+
+        switch (cellType) {
+            case NUMERIC:// = 0; 数字（日期、普通数字等）。
+//                System.out.print("【~ ~ ~ CELL_TYPE ~ numeric ～ 0 ~ ~ ~】");
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    // 日期。
+//                    System.out.print("【~ ~ ~ CELL_TYPE ~ numeric ～ 0 ～ 日期。~ ~ ~】");
+                    cellValue = cell.getDateCellValue();
+                } else {
+//                    System.out.print("【~ ~ ~ CELL_TYPE ~ numeric ～ 0 ～ 转换为字符串输出。~ ~ ~】");
+//                     如果不是日期格式，防止数字过长。
+//                    cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+                    cellValue = cell.getNumericCellValue();
+                }
+                break;
+
+            case STRING:// = 1;
+//                System.out.print("【~ ~ ~ CELL_TYPE ~ String ～ 1 ~ ~ ~】");
+                cellValue = cell.getStringCellValue();
+                break;
+
+            case FORMULA:// = 2;
+//                System.out.println("~ ~ ~ CELL_TYPE ~ formula ～ 2 ~ ~ ~");
+                cellValue = cell.getCellFormula();
+                break;
+
+//            case HSSFCell.CELL_TYPE_BLANK:// = 3;
+//                System.out.print("【~ ~ ~ CELL_TYPE ~ blank ～ 3 ~ ~ ~】");
+//                break;
+
+            case BOOLEAN:// = 4;
+//                System.out.print("【~ ~ ~ CELL_TYPE ~ boolean ～ 4 ~ ~ ~】");
+                cellValue = cell.getBooleanCellValue();
+                break;
+
+//            case HSSFCell.CELL_TYPE_ERROR:// = 5;
+//                System.out.print("【~ ~ ~ CELL_TYPE ~ error ～ 5 数据类型错误。~ ~ ~】");
+//                cellValue = String.valueOf(cell.getErrorCellValue());
+//                break;
+
+            default:
+                break;
+        }
+
+        return cellValue;
+    }
+
+    /**
+     * 通过 DataUrl 形式上传到数据。/七牛云在 Service 层改造。
+     *
+     * @param id
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/user/upload/{id}")
+    public Result upload(@PathVariable String id,
+                         @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        // 调用 Service 保存图片。获取图片访问地址。dataUrl 或 http 地址。
+        String imgUrl = userService.uploadImage(id, multipartFile);
+        // 返回数据。
+        return new Result(ResultCode.SUCCESS, imgUrl);
+        // {success: true, code: null, message: "操作成功。", data: "data:image/png;base64,[B@108319af"}
+        //success: true
+        //code: null
+        //message: "操作成功。"
+        //data: "data:image/png;base64,[B@108319af"
+    }
+
+    /**
+     * 通过 Excel 批量上传用户信息。
+     *
+     * @param multipartFile
+     * @return
+     */
+    @PostMapping("/user/import")
+    public Result importUser(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+//        // - 解析 excel。
+//        // 根据 excel 文件创建工作薄。
+//        Workbook workbook = new XSSFWorkbook(multipartFile.getInputStream());
+//        // 获取 sheet。
+//        Sheet sheet = workbook.getSheetAt(0);
+//        // 获取 sheet 的每一行，和每一个单元格。
+//
+//        // 获取用户数据列表。
+//        List<User> list = new ArrayList<>();
+//
+//        for (int rowNum = 1; rowNum < sheet.getLastRowNum() + 1; rowNum++) {
+//            Row row = sheet.getRow(rowNum);// 根据索引获取每一行。
+//
+//            Object[] values = new Object[row.getLastCellNum()];
+//
+//            for (int cellNum = 1; cellNum < row.getLastCellNum(); ++cellNum) {
+//                Cell cell = row.getCell(cellNum);// 根据索引获取每一单元格。
+//                // 获取每一个单元格的内容。
+//                Object cellValue = getCellValue(cell);
+//                values[cellNum] = cellValue;
+//            }
+//            User user = new User(values);
+//            list.add(user);
+//        }
+
+        // java.lang.IllegalAccessException: Class com.geek.common.poi.ExcelImportUtil can not access a member of class com.geek.domain.system.User with modifiers "private"
+        List<User> list1 = new ExcelImportUtil(User.class).readExcel(multipartFile.getInputStream(), 1, 1);
+
+        // 批量保存用户。
+        userService.saveAll(list1, companyId, companyName);
+
+        return new Result(ResultCode.SUCCESS);
+    }
 
     /**
      * 测试 feign 组件。

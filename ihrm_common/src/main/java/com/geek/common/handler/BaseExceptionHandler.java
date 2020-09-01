@@ -4,7 +4,6 @@ import com.geek.common.entity.Result;
 import com.geek.common.entity.ResultCode;
 import com.geek.common.exception.CommonException;
 import org.apache.shiro.authz.AuthorizationException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -14,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 自定义公共异常处理器。
  */
-@ControllerAdvice
+//@ControllerAdvice
 public class BaseExceptionHandler {
 
     @ExceptionHandler(Exception.class)

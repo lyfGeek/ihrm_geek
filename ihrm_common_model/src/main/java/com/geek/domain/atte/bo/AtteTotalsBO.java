@@ -10,7 +10,7 @@ public class AtteTotalsBO {
     private Integer tobeTaskCount;
 
     /**
-     * 当前报表月份
+     * 当前报表月份。
      */
     private Integer monthOfReport;
 }

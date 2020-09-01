@@ -2,7 +2,6 @@ package com.geek.domain.atte.entity;
 
 import com.geek.domain.atte.base.BaseEntity;
 import com.geek.domain.system.User;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,8 +15,6 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "atte_archive_monthly_info")
 @Data
-@AllArgsConstructor
-//@NoArgsConstructor
 public class ArchiveMonthlyInfo extends BaseEntity implements Serializable {
 
     @Id

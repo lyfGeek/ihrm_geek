@@ -23,5 +23,4 @@ public class AtteStatisBO implements Serializable {
     private String day;
 
     private Integer adtStatu;
-
 }

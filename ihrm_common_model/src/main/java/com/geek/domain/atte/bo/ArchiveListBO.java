@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data

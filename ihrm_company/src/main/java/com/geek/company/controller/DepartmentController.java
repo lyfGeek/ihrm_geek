@@ -21,6 +21,7 @@ public class DepartmentController extends BaseController {
 
     @Autowired
     private IDepartmentService departmentService;
+
     @Autowired
     private ICompanyService companyService;
 
@@ -40,7 +41,6 @@ public class DepartmentController extends BaseController {
         // 返回结果。
         return new Result(ResultCode.SUCCESS);
     }
-
 
     /**
      * 查询企业的所有部门。
@@ -95,5 +95,11 @@ public class DepartmentController extends BaseController {
     public Result delete(@PathVariable("departmentId") String id) {
         departmentService.deleteById(id);
         return new Result(ResultCode.SUCCESS);
+    }
+
+    @RequestMapping("/department/search")
+    public Department findByCode(@RequestParam("code") String code,
+                                 @RequestParam("companyId") String companyId) {
+        return departmentService.findByCode(code, companyId);
     }
 }

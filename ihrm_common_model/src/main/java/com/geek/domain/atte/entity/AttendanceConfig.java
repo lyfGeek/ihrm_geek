@@ -1,10 +1,8 @@
 package com.geek.domain.atte.entity;
 
 import com.geek.domain.atte.base.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,15 +11,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * 考勤配置表。
+ */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "atte_attendance_config")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-/**
- *考勤配置表。
- */
 public class AttendanceConfig extends BaseEntity implements Serializable {
 
     @Id

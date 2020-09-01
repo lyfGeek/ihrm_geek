@@ -1,6 +1,5 @@
 package com.geek.domain.atte.bo;
 
-
 import com.geek.domain.atte.entity.Attendance;
 import lombok.Data;
 

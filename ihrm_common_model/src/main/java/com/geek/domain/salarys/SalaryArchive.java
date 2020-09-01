@@ -17,7 +17,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SalaryArchive implements Serializable {
-    private static final long serialVersionUID = -8362752557188295516L;
     @Id
     private String id;
     /**

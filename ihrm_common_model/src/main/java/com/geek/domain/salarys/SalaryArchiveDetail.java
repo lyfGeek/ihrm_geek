@@ -18,7 +18,6 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
 @Entity
 @Table(name = "sa_archive_detail")
 @Data
-//@NoArgsConstructor
 @AllArgsConstructor
 public class SalaryArchiveDetail implements Serializable {
     /**

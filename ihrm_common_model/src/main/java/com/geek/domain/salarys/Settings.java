@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Settings implements Serializable {
-    private static final long serialVersionUID = 4570110025510021036L;
     /**
      * 企业 id。
      */

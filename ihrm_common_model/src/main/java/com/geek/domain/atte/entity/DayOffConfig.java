@@ -1,10 +1,8 @@
 package com.geek.domain.atte.entity;
 
 import com.geek.domain.atte.base.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,8 +16,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "atte_day_off_config")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class DayOffConfig extends BaseEntity implements Serializable {
 
     @Id

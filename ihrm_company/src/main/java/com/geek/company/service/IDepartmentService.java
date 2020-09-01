@@ -41,4 +41,12 @@ public interface IDepartmentService {
      */
     Department findById(String id);
 
+    /**
+     * 根据部门编码和企业 id 查询部门。
+     *
+     * @param code
+     * @param companyId
+     * @return
+     */
+    Department findByCode(String code, String companyId);
 }

@@ -2,13 +2,24 @@ package com.geek.system.service;
 
 import com.geek.domain.system.User;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public interface IUserService {
 
     User findByMobile(String mobile);
+
+    /**
+     * 批量保存用户。
+     *
+     * @param list
+     * @param companyId
+     * @param companyName
+     */
+    void saveAll(List<User> list, String companyId, String companyName);
 
     /**
      * 保存用户。
@@ -52,4 +63,13 @@ public interface IUserService {
      * @param roleIds
      */
     void assignRoles(String userId, List<String> roleIds);
+
+    /**
+     * 上传图片并返回图片路径。
+     *
+     * @param id
+     * @param multipartFile
+     * @return
+     */
+    String uploadImage(String id, MultipartFile multipartFile) throws IOException;
 }

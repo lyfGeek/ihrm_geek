@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CityPaymentItem implements Serializable {
-    private static final long serialVersionUID = -2676589979027211627L;
     @Id
     private String id;
     /**

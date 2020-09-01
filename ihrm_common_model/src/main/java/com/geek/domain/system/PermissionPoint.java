@@ -1,7 +1,6 @@
 package com.geek.domain.system;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,8 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "pe_permission_point")
-@Getter
-@Setter
+@Data
 public class PermissionPoint implements Serializable {
     /**
      * 主键。

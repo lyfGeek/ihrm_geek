@@ -23,3 +23,11 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:6868/eureka/
+my:
+  appId: 22249409
+  apiKey: n9KC5d6UsMOPLIAt35OZDfcX
+  secretKey: SWMHsylM8soQv1Fsgke0qHUKLyqtx9ca
+  imageType: BASE64
+  groupId: geek
+qr:
+  url: http://192.168.142.168:8080/#/facelogin

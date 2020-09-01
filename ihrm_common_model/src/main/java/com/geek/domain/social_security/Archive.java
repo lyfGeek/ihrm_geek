@@ -13,7 +13,6 @@ import java.util.Date;
 @Entity
 @Table(name = "ss_archive")
 @Data
-//@NoArgsConstructor
 @AllArgsConstructor
 public class Archive implements Serializable {
 
